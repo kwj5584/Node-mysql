@@ -10,14 +10,24 @@ var conn = mysql.createConnection({
 
 conn.connect();
 
-var sql = 'select * from topic';
-conn.query(sql, (err, rows, fields)=>{
-    if(err) {
+// var sql = 'select * from topic';
+// conn.query(sql, (err, rows, fields)=>{
+//     if(err) {
+//         console.log(err);
+//     } else{
+//         for(var i=0; i<rows.length;i++){
+//             console.log(rows[i].title)
+//         }
+//     }
+// })
+
+var sql = 'insert into topic (title,description,author) values(?, ?, ?)';
+var params = ['Supervisor', 'Watcher', 'graphittie']
+conn.query(sql,params, (err,rows,fields)=>{
+    if(err){
         console.log(err);
     } else{
-        console.log('rows :', rows);
-        // console.log('fields :',fields)
+        console.log(rows.insertId);
     }
 })
-
 conn.end();
