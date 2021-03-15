@@ -21,13 +21,34 @@ conn.connect();
 //     }
 // })
 
-var sql = 'insert into topic (title,description,author) values(?, ?, ?)';
-var params = ['Supervisor', 'Watcher', 'graphittie']
-conn.query(sql,params, (err,rows,fields)=>{
+// var sql = 'insert into topic (title,description,author) values(?, ?, ?)';
+// var params = ['Supervisor', 'Watcher', 'graphittie']
+// conn.query(sql,params, (err,rows,fields)=>{
+//     if(err){
+//         console.log(err);
+//     } else{
+//         console.log(rows.insertId);
+//     }
+// })
+
+// var sql = 'update topic set title=?, author=? where id=?'
+// var params = ['NPM', 'leezche', '2'];
+// conn.query(sql,params, (err, rows, fileds)=>{
+//     if(err){
+//         console.log(err);
+//     } else{
+//         console.log(rows);
+//     }
+// })
+
+var sql = 'delete from topic where id=?'
+var params = [2];
+conn.query(sql,params, (err, rows, fileds)=>{
     if(err){
         console.log(err);
     } else{
-        console.log(rows.insertId);
+        console.log(rows);
     }
 })
+
 conn.end();
