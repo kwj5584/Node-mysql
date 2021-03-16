@@ -28,7 +28,7 @@ app.get(['/topic', '/topic/:id'], (req,res)=>{
             const sql = 'select * from topic where id=?'
             conn.query(sql, [id], (err, rows,fields)=>{
                 if(err){
-                    console.log(err)
+                    res.status(500).send("Internal Server Error")
                 }
                 else{
                     res.render('view',{topics:topics, topic: rows[0]})
