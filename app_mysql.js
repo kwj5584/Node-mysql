@@ -1,12 +1,12 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
 
-var mysql = require('mysql');
-var app = express();
+const mysql = require('mysql');
+const app = express();
 app.locals.pretty = true;
 require('dotenv').config()
 
-var conn = mysql.createConnection({
+const conn = mysql.createConnection({
     host : process.env.DB_HOST,
     user :process.env.DB_USERNAME,
     password :process.env.DB_PASSWORD,
@@ -21,18 +21,25 @@ app.use(bodyParser.urlencoded({ extended: false }))
 conn.connect(); 
 
 app.get(['/topic', '/topic/:id'], (req,res)=>{
-    var sql = 'select id,title from topic';
+    const sql = 'select id,title from topic';
     conn.query(sql, (err, topics, fields)=>{
-        if(err){
-            res.status(500).json(err);
-            console.log(err)
+        const id = req.params.id;
+        if(id){
+            const sql = 'select * from topic where id=?'
+            conn.query(sql, [id], (err, rows,fields)=>{
+                if(err){
+                    console.log(err)
+                }
+                else{
+                    res.render('view',{topics:topics, topic: rows[0]})
+                }
+            })
         }else{
-        res.render('view',{topics:topics});
-        console.log(topics)
-    }
+            res.render('view',{topics:topics});
+        }
+        
     });
 })
-
 
 app.listen(3000,()=>{
     console.log(`app listening at http://localhost:3000`)
