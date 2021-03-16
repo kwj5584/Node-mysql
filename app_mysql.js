@@ -1,16 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-// var multer = require("multer");
-// var _storage = multer.diskStorage({
-//     destination: function( req, file, cb ){
-//         cb(null, 'uploads/')
-//     },
-//     filename : function(req,file,cb){
-//         cb(null, file.originalname)
-//     }
-// })
-// var upload = multer({storage:_storage})
-// var fs = require('fs')
+
 var mysql = require('mysql');
 var app = express();
 app.locals.pretty = true;
@@ -21,8 +11,8 @@ var conn = mysql.createConnection({
     user :process.env.DB_USERNAME,
     password :process.env.DB_PASSWORD,
     database : process.env.DB_NAME,
-    // port : process.env.DB_PORT
 });
+
 app.set('view engine', 'jade');
 app.set('views', './views_mysql');
 app.use('/user', express.static('public'));
@@ -38,7 +28,7 @@ app.get(['/topic', '/topic/:id'], (req,res)=>{
             console.log(err)
         }else{
         res.render('view',{topics:topics});
-        
+        console.log(topics)
     }
     });
 })

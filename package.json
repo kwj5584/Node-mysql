@@ -2,8 +2,10 @@
   "name": "node-mysql",
   "version": "0.0.0",
   "private": true,
+  "main" : "app_mysql",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev" : "nodemon app_mysql.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
