@@ -20,6 +20,69 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 conn.connect(); 
 
+app.get('/topic/add', (req,res)=>{
+    const sql = 'select id,title from topic';
+    conn.query(sql, (err,topics,fields)=>{
+        if(err){
+            console.log(err);
+            res.status(500).send("Internal Server Error");
+        }
+        res.render('add', {topics:topics})
+    })
+});
+
+app.post('/topic/add',(req,res)=>{
+    const title = req.body.title;
+    const description = req.body.description;
+    const author = req.body.author;
+
+    const sql = 'insert into topic (title,description,author) values(?,?,?)';
+    conn.query(sql,[title, description, author],(err,result,fields)=>{
+        if(err){
+            console.log(err);
+            res.status(500).send("Internal Server Error");
+        }else{
+            res.redirect('/topic/'+result.insertId);
+        }
+    })
+})
+
+app.get('/topic/:id/edit',(req,res)=>{
+    const sql = 'select id,title from topic';
+    conn.query(sql, (err, topics, fields)=>{
+        const id = req.params.id;
+        if(id){
+            const sql = 'select * from topic where id=?'
+            conn.query(sql,[id], (err,topic,fields)=>{
+                if(err){
+                res.status(500).send('Internal Server Error');
+            }else{
+                res.render('edit',{topics:topics,topic:topic[0]})
+            }
+            });
+        }else{
+            res.status(500).send('Internal Server Error');
+        }
+    })
+})
+
+app.post('/topic/:id/edit',(req,res)=>{
+    const title = req.body.title;
+    const description = req.body.description;
+    const author = req.body.author;
+    const id = req.params.id
+    const sql = "update topic set title=?, description=?, author=? where id=?";
+
+    conn.query(sql,[title,description,author,id],(err,rows,fields)=>{
+        if(err){
+            console.log(err);
+            res.status(500).send('Internal Server Error');
+        }else{
+            res.redirect('/topic/'+id);
+        }
+    })
+});
+
 app.get(['/topic', '/topic/:id'], (req,res)=>{
     const sql = 'select id,title from topic';
     conn.query(sql, (err, topics, fields)=>{
@@ -39,7 +102,8 @@ app.get(['/topic', '/topic/:id'], (req,res)=>{
         }
         
     });
-})
+});
+
 
 app.listen(3000,()=>{
     console.log(`app listening at http://localhost:3000`)
