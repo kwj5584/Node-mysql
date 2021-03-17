@@ -83,6 +83,41 @@ app.post('/topic/:id/edit',(req,res)=>{
     })
 });
 
+app.get('/topic/:id/delete',(req,res)=>{
+    const sql = 'select id,title from topic';
+    const id = req.params.id
+    conn.query(sql, (err, topics, fields)=>{
+        const sql = 'select * from topic where id=?';
+        conn.query(sql, [id], (err, topic, fields)=>{
+            if(err){
+                res.status(500).send("Internal Server Error")
+            } else{
+                if(topic.length === 0){
+                    console.log('There is no record.')
+                    res.status(500).send("Internal Server Error")
+                } else{
+                    res.render('delete', {topics:topics, topic:topic[0]});
+                }
+            }
+        })
+    })
+})
+
+app.post('/topic/:id/delete', (req,res)=>{
+    const id = req.params.id;
+    const sql = 'delete from topic where id=?';
+    conn.query(sql,[id], (err,rows,fields)=>{
+        if(err){
+            res.status(500).send("Internal Server Error");
+        }else{
+            if(rows.affectedRows){
+                console.log('삭제완료');
+                res.redirect('/topic/');
+            }
+        }
+    })
+})
+
 app.get(['/topic', '/topic/:id'], (req,res)=>{
     const sql = 'select id,title from topic';
     conn.query(sql, (err, topics, fields)=>{
